@@ -182,7 +182,7 @@ def getAllUser(page,role,q):
     if q is not None:
         if check:
             strSearch+=" and "
-        strSearch+=f" maTaiKhoan LIKE '%{q}%' or taiKhoan LIKE '%{q}%' or hoTen LIKE '%{q}%'"
+        strSearch+=f" maTaiKhoan LIKE '%{q}%' or taiKhoan LIKE '%{q}%' or hoTen LIKE N'%{q}%'"
         check=True
     sql="SELECT * from TaiKhoan "
     if check:
