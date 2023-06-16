@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <button id="btn-login">Login</button>
+        <br />
+        <br />
+        <button id="btn-dangKy">Dang ky</button>
+        <br />
+        <br />
+        <button id="btn-changePass">Change pass</button>
+        <br />
+        <br />
+        <button id="btn-updateInfo">Update info user</button>
+        <input type="file" name="images" id="img" />
+        <h2 id="h2"></h2>
+
+        <br />
+        <br />
+        <button id="btn-updateOder">updateOder</button>
+
+        <br />
+        <br />
+        <button id="btn-addOder">addOder</button>
+
+        <br />
+        <br />
+        <button id="btn-thanhToan">bill</button>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const btn = document.getElementById('btn-login');
+            btn.addEventListener('click', (e) => {
+                const apiUrl = 'http://localhost:5000/login';
+                const data = {
+                    username: 'KH2',
+                    password: '2',
+                };
+
+                axios
+                    .post(apiUrl, data)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        </script>
+
+        <script>
+            const btnDangKy = document.getElementById('btn-dangKy');
+            btnDangKy.addEventListener('click', (e) => {
+                const apiUrl = 'http://localhost:5000/addAccount';
+                const data = {
+                    username: 'qweqwe313234q',
+                    password: 'adqweq',
+                    role: 'Khách hàng',
+                };
+
+                axios
+                    .post(apiUrl, data)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        </script>
+
+        <script>
+            const btnchangePass = document.getElementById('btn-changePass');
+            btnchangePass.addEventListener('click', (e) => {
+                const apiUrl = 'http://localhost:5000/changePass';
+                const data = {
+                    maTaiKhoan: 'KH00000002',
+                    newPassword: '2',
+                    oldPassword: '1',
+                };
+
+                axios
+                    .post(apiUrl, data)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        </script>
+
+        <script>
+            const btnupdateInfo = document.getElementById('btn-updateInfo');
+            btnupdateInfo.addEventListener('click', (e) => {
+                const formData = new FormData();
+                const imageInput = document.getElementById('img');
+                formData.append('maTaiKhoan', 'KH00000003');
+                formData.append('email', '3qweqw@gmail.com');
+                formData.append('hoTen', 'Bùi asd trường');
+                formData.append('ngaySinh', '21-02-2002');
+
+                // formData.append('cccd', "asdasd");
+                // formData.append('sdt', "0000");
+                formData.append('avatar', imageInput.files[0]);
+                // formData.append('diaChi', 'Liên chiểu, đà nẵng');
+
+                axios
+                    .post('http://localhost:5000/updateInfoUser', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    })
+                    .then((response) => {
+                        // Xử lý phản hồi thành công
+                        console.log('Yêu cầu POST thành công.');
+                        console.log('Phản hồi từ máy chủ:', response.data);
+                        // document.getElementById('h2').innerHTML=response.data
+                    })
+                    .catch((error) => {
+                        // Xử lý lỗi nếu có
+                        console.error('Lỗi khi gửi yêu cầu POST:', error);
+                    });
+            });
+        </script>
+
+        <script>
+            const updateOder = document.getElementById('btn-updateOder');
+            updateOder.addEventListener('click', (e) => {
+                const apiUrl = 'http://localhost:5000/nvSetOrder';
+                const data = {
+                    maNVDuyet: 'NV00000001',
+                    maThue: 'DH00000004',
+                    trangThai: 'Đã duyệt',
+                };
+
+                axios
+                    .post(apiUrl, data)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        </script>
+
+        <script>
+            const addOder = document.getElementById('btn-addOder');
+            addOder.addEventListener('click', (e) => {
+                const apiUrl = 'http://localhost:5000/addOrder';
+                const data = {
+                    maKH: 'KH00000001',
+                    ngayBD: '24-05-2018',
+                    ngayKT: '29-05-2019',
+                    listMoto: ['XE00000004', 'XE00000003'],
+                };
+
+                axios
+                    .post(apiUrl, data)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        </script>
+
+        <script>
+            const thanhToan = document.getElementById('btn-thanhToan');
+            thanhToan.addEventListener('click', (e) => {
+                const apiUrl = 'http://localhost:5000/payOrder';
+                const data = {
+                    maThue: 'DH00000007',
+                    maNVNhanXe: 'NV00000001',
+                    xe: [
+                        {
+                            maXe: 'XE00000003',
+                            maLoi: 14,
+                            loi: [
+                                {
+                                    maLoaiLoi: 4,
+                                    tienPhat: 434,
+                                    ghiChu: 'Trầy xước xe',
+                                },
+                                {
+                                    maLoaiLoi: 5,
+                                    tienPhat: 123,
+                                    ghiChu: 'tùm lum',
+                                },
+                            ],
+                        },
+                    ],
+                };
+
+                axios
+                    .post(apiUrl, data)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        </script>
+    </body>
+</html>
