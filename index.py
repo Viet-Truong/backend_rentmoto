@@ -49,6 +49,18 @@ def getAllUser(page:int=None,role:str=None,q:str=None):
         page=1
     return user.getAllUser(page,role,q)
 
+@app.get("/getAllCustomer")
+def getAllUser(page:int=None,q:str=None):
+    if page is None:
+        page=1
+    return user.getAllCustomer(page,q)
+
+@app.get("/getAllEmployees")
+def getAllUser(page:int=None,q:str=None):
+    if page is None:
+        page=1
+    return user.getAllEmployees(page,q)
+
 
 @app.post('/addAccount')
 def addAccount(rq=Body()):

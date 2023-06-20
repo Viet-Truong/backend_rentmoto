@@ -162,7 +162,7 @@ async def updateInfoUser(rq,relative_path):
         conn.close()
     return rs
 
-def getAllUser(page,role,q):
+def getAllUser(page,role,q=None):
     so_item=7
     vt=(page-1)*so_item
 
@@ -176,7 +176,7 @@ def getAllUser(page,role,q):
     stringRole=''
     check=False
     if role is not None:
-        stringRole=f" phanQuyen='{role}'"
+        stringRole=f" phanQuyen=N'{role}'"
         check=True
     strSearch=''
     if q is not None:
@@ -188,6 +188,54 @@ def getAllUser(page,role,q):
     if check:
         sql+=" WHERE"+stringRole+strSearch
     sql+=f" order by maTaiKhoan desc OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    columnName=[column[0] for column in cursor.description]
+    
+    rs = printRs(SUCCESS,None,rsData(rows,columnName), True)
+    rs['soTrang']=getSoTrang(soLuong,so_item)
+    return rs
+
+
+def getAllCustomer(page,q=None):
+    so_item=7
+    vt=(page-1)*so_item
+
+    conn = connect()
+    cursor = conn.cursor 
+    sql="SELECT count(maTaiKhoan) as soluong from TaiKhoan where phanQuyen = N'Khách hàng'"
+    cursor.execute(sql)
+    row = cursor.fetchone()
+    soLuong  = row.soluong
+    rs={}
+    strSearch=""
+    if q is not None:
+        strSearch+=f" and hoTen LIKE N'%{q}%'"
+    sql="SELECT * from TaiKhoan WHERE phanQuyen= N'Khách hàng'" + strSearch + f' order by maTaiKhoan desc OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;'
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    columnName=[column[0] for column in cursor.description]
+    
+    rs = printRs(SUCCESS,None,rsData(rows,columnName), True)
+    rs['soTrang']=getSoTrang(soLuong,so_item)
+    return rs
+
+
+def getAllEmployees(page,q=None):
+    so_item=7
+    vt=(page-1)*so_item
+
+    conn = connect()
+    cursor = conn.cursor 
+    sql="SELECT count(maTaiKhoan) as soluong from TaiKhoan where phanQuyen= N'Nhân viên'"
+    cursor.execute(sql)
+    row = cursor.fetchone()
+    soLuong  = row.soluong
+    rs={}
+    strSearch=""
+    if q is not None:
+        strSearch+=f" and hoTen LIKE N'%{q}%'"
+    sql="SELECT * from TaiKhoan WHERE phanQuyen= N'Nhân viên'" + strSearch + f' order by maTaiKhoan desc OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;'
     cursor.execute(sql)
     rows = cursor.fetchall()
     columnName=[column[0] for column in cursor.description]
