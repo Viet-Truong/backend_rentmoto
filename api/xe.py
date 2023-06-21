@@ -26,17 +26,18 @@ def getAllXe(q,role,page=None):
         sqlRole=" trangThai in (N'Hoạt động',N'Đang cho thuê') "
         check=True
     else:
-        sqlPage=f" order by maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
+        sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
     if q is not None:
-        strSearch=f" and tenXe LIKE '%{q}%' "
+        if role:
+            strSearch=f" and tenXe LIKE N'%{q}%' "
+        else:
+            strSearch=f" tenXe LIKE N'%{q}%' "
         check=True
-    where = " WHERE " if check else "as"
+    where = " WHERE " if check else " "
     
     
     sql='SELECT * FROM Xe'+where+sqlRole+strSearch+sqlPage
     print(sql)
-    
-    
     
     cursor.execute(sql)
     rows = cursor.fetchall()
@@ -52,19 +53,17 @@ def getAllXe(q,role,page=None):
             if xe['maXe']==hinhAnh.maXe:
                 hinh_anh_list.append(getURLImg('hinhAnh',hinhAnh.hinhAnh))
         xe['hinhAnh']=hinh_anh_list
-    rs = printRs(SUCCESS,None,dataXe)
+    rs = printRs(SUCCESS,None,dataXe, True)
     if not role:
         sql="SELECT count(maXe) as soluong from Xe "+where+sqlRole+strSearch
         cursor.execute(sql)
         row = cursor.fetchone()
-        
-        
         soLuong= row[0]
-        
-        
         rs['soTrang']=getSoTrang(soLuong,so_item)
     conn.close()
     return rs
+
+
 def getXe(maXe):
     conn = connect()
     cursor = conn.cursor
