@@ -87,6 +87,10 @@ def getall(q:str=None,page:int=None,type=None):
         page=1
     return xe.getAllXe(q,False,page,type)
 
+@app.get("/thongkeXe")
+def thong_ke_xe():
+    return xe.thongKeXe()
+
 
 @app.get("/getXe/{maXe}")
 def getall(maXe:str):

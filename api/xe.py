@@ -2,6 +2,7 @@ from api.Connect import connect
 from api.xuli import *
 import pyodbc
 from pathlib import Path
+import json
 
 
 ERROR='error'
@@ -214,4 +215,35 @@ async def updateXe(rq,relative_path,files):
         conn.close()
     return rs
 
+
+def thongKeXe():
+    conn = connect()
+    cursor = conn.cursor
+
+    # Tổng số user
+    sql_tong_so_xe = 'SELECT COUNT(maXe) FROM Xe'
+    cursor.execute(sql_tong_so_xe)
+    tong_so_xe = cursor.fetchone()[0]
+
+    # Tổng số user role = nhan vien
+    sql_tong_so_xe_dang_hoat_dong = "SELECT COUNT(maXe) FROM Xe WHERE trangThai = N'Hoạt động'"
+    cursor.execute(sql_tong_so_xe_dang_hoat_dong)
+    tong_so_xe_dang_hoat_dong = cursor.fetchone()[0]
+
+    # Tổng số user role = khách hàng
+    sql_tong_so_ngung_hoat_dong = "SELECT COUNT(maTaiKhoan) FROM TaiKhoan WHERE trangThai in (N'Ngưng hoạt động', N'Đã mất')"
+    cursor.execute(sql_tong_so_ngung_hoat_dong)
+    tong_so_xe_ngung_hoat_dong = cursor.fetchone()[0]
+
+    # Đóng kết nối cơ sở dữ liệu
+    conn.close()
+
+    # Tạo dictionary để lưu trữ kết quả
+    thong_ke = {
+        'SumMoto': tong_so_xe,
+        'SumMotoActive': tong_so_xe_dang_hoat_dong,
+        'SumMotoUnActive': tong_so_xe_ngung_hoat_dong,
+    }
+    # Trả về kết quả dưới dạng JSON
+    return json.dumps(thong_ke)
 
