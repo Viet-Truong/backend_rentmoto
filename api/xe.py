@@ -9,7 +9,7 @@ SUCCESS='success'
 DATA_INVALID='Data invalid'
 DATA_NULL='Data null'
 
-def getAllXe(q,role,page=None):
+def getAllXe(q,role,page=None,type=None):
     #role=true khách hàng, role=False NV
     if page is not None:
         so_item=10
@@ -27,14 +27,20 @@ def getAllXe(q,role,page=None):
         check=True
     else:
         sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
-    if q is not None:
+    if q != '':
         if role:
-            strSearch=f" and tenXe LIKE N'%{q}%' "
+            strSearch=f"tenXe LIKE N'%{q}%'"
         else:
-            strSearch=f" tenXe LIKE N'%{q}%' "
+            strSearch=f"tenXe LIKE N'%{q}%'"
         check=True
-    where = " WHERE " if check else " "
     
+    if type != '':
+        if q!= '':
+            where = f" WHERE loaiXe = N'{type}' and "
+        else:
+            where = f" WHERE loaiXe = N'{type}'"
+    else:
+        where = " WHERE " if check else " "
     
     sql='SELECT * FROM Xe'+where+sqlRole+strSearch+sqlPage
     print(sql)

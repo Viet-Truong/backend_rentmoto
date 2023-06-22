@@ -82,10 +82,12 @@ def getall(q:str=None):
     return xe.getAllXe(q,True)
 
 @app.get("/getAllXeAdmin")
-def getall(q:str=None,page:int=None):
+def getall(q:str=None,page:int=None,type=None):
     if page is None:
         page=1
-    return xe.getAllXe(q,False,page)
+    return xe.getAllXe(q,False,page,type)
+
+
 @app.get("/getXe/{maXe}")
 def getall(maXe:str):
     return xe.getXe(maXe)
