@@ -156,7 +156,7 @@ async def addXe(rq,relative_path,files):
 
 async def updateXe(rq,relative_path,files):
     rs={}
-    paramsAccept=['maXe','tenXe','hangXe','bienSoXe','loaiXe','giaThue','trangThai','moTa','images']
+    paramsAccept=['maXe','tenXe','hangXe','bienSoXe','loaiXe','giaThue','trangThai','moTa', 'slug','images']
     listParams=list(rq.keys())
     print(listParams)
     if not checkInvalid(listParams,paramsAccept):
