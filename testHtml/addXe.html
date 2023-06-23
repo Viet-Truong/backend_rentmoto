@@ -28,6 +28,7 @@
                 formData.append('giaThue', 210320);
                 formData.append('trangThai', 'Hoạt động');
                 formData.append('moTa', null);
+                formData.append('slug', '123');
                 console.log(formData);
                 axios
                     .post('http://localhost:5000/addXe', formData, {

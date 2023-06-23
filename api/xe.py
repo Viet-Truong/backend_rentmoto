@@ -26,17 +26,15 @@ def getAllXe(q,role,page=None,type=None):
     if role:
         sqlRole=" trangThai in (N'Hoạt động',N'Đang cho thuê') "
         check=True
-    else:
-        sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
-    if q != '':
-        if role:
-            strSearch=f"tenXe LIKE N'%{q}%'"
-        else:
-            strSearch=f"tenXe LIKE N'%{q}%'"
+    # else:
+    #     sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
+
+    if q != '' and q is not None:
+        strSearch=f"tenXe LIKE N'%{q}%'"
         check=True
     
-    if type != '':
-        if q!= '':
+    if type != '' and type is not None:
+        if q!= '' and q is not None:
             where = f" WHERE loaiXe = N'{type}' and "
         else:
             where = f" WHERE loaiXe = N'{type}'"
@@ -104,7 +102,7 @@ def getXe(maXe):
 
 async def addXe(rq,relative_path,files):
     rs={}
-    paramsAccept=['tenXe','hangXe','bienSoXe','loaiXe','giaThue','trangThai','moTa','images']
+    paramsAccept=['tenXe','hangXe','bienSoXe','loaiXe','giaThue','trangThai','moTa', 'slug','images']
     listParams=list(rq.keys())
 
     
@@ -136,11 +134,12 @@ async def addXe(rq,relative_path,files):
                         i+=1
                 strListHinhAnh=strListHinhAnh.rstrip(";")
                 cursor.execute("SET DATEFORMAT dmy")
-                params=[rq['tenXe'],rq['hangXe'],rq['trangThai'],rq['bienSoXe'],rq['loaiXe'],rq['giaThue'],rq['moTa']]
-                sql="EXEC pr_add_Xe @tenXe=?,@hangXe=?,@trangThai=?,@bienSoXe=?,@loaiXe=?,@giaThue=?,@moTa=?"
+                params=[rq['tenXe'],rq['hangXe'],rq['trangThai'],rq['bienSoXe'],rq['loaiXe'],rq['giaThue'],rq['moTa'], rq['slug']]
+                sql="EXEC pr_add_Xe @tenXe=?,@hangXe=?,@trangThai=?,@bienSoXe=?,@loaiXe=?,@giaThue=?,@moTa=?, @slug=?"
                 if strListHinhAnh!='':
                     sql+=",@listHinhAnh=?"
                     params.append(strListHinhAnh)
+                    print(strListHinhAnh)
             
                 
                 cursor.execute(sql,params)
