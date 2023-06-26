@@ -34,9 +34,13 @@ def login(rq = Body()):
     return user.checkLogin(rq)
 
 
-@app.get("/thongke")
+@app.get("/thongkeRent")
 def thong_ke_dang_ky_thue_xe():
-    return get.thongKe()
+    return order.thongKeRent()
+
+@app.get("/thongkeReturn")
+def thong_ke_dang_ky_thue_xe():
+    return order.thongKeReturn()
 
 @app.get("/thongkeUser")
 def thong_ke_dang_ky_thue_xe():
@@ -133,6 +137,12 @@ def getDonHang(q:str=None,page:int=None):
     if page is None:
         page=1
     return order.getOrderUnAccepted(page,q)
+
+@app.get("/getOrderDone")
+def getDonHang(q:str=None,page:int=None):
+    if page is None:
+        page=1
+    return order.getOrderDone(page,q)
 
 @app.get("/getOrder/{id_order}")
 def getOrder(id_order):

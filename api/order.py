@@ -3,7 +3,8 @@ from api.xuli import *
 import pyodbc
 from pathlib import Path
 from datetime import date
-
+import json
+import decimal
 
 ERROR='error'
 SUCCESS='success'
@@ -122,6 +123,53 @@ def getOrderUnAccepted(page,q=None,maTaiKhoan=None):
     columnName=[column[0] for column in cursor.description]
     data_don=rsData(data_don,columnName)
     sql=f"SELECT count(*) from DangKyThueXe, TaiKhoan where DangKyThueXe.maKH = TaiKhoan.maTaiKhoan and DangKyThueXe.trangThai = N'Chưa duyệt'"+strSearch +f""
+    cursor.execute(sql)
+    row = cursor.fetchone()
+    soLuong = row[0]
+    soTrang=getSoTrang(soLuong,so_item)
+
+    
+
+    sql="SELECT ChiTietThueXe.*,tenXe,loaiXe,hangXe,bienSoXe from ChiTietThueXe,Xe where ChiTietThueXe.maXe=Xe.maXe"
+    cursor.execute(sql)
+    data_chitiet = cursor.fetchall()
+    columnName=[column[0] for column in cursor.description]
+    data_chitiet=rsData(data_chitiet,columnName)
+    
+    sql="SELECT ct.maLoi as maLoi,lp.noiDungLoi as noiDungLoi,ct.ghiChu as ghiChu,ct.tienPhat as tienPhat FROM ChiTietLoiPhat as ct, LoiPhat as lp WHERE ct.maLoaiLoi = lp.maLoaiLoi"
+    cursor.execute(sql)
+    data_loi = cursor.fetchall()
+    columnName=[column[0] for column in cursor.description]
+    data_loi=rsData(data_loi,columnName)
+    
+    new_data_chitiet=mergeData(data_chitiet,data_loi,"maLoi","loi")
+    
+    
+    new_data=mergeData(data_don,new_data_chitiet,"maThue","chiTiet")
+    
+    rs = printRs(SUCCESS,None,new_data,True)
+    rs['soTrang'] = soTrang
+    conn.close()
+    return rs
+
+def getOrderDone(page,q=None,maTaiKhoan=None):
+    so_item=10
+    vt=(page-1)*so_item
+
+    # kt=(page-1)*10+10
+    conn = connect()
+    cursor = conn.cursor 
+    rs={}
+    strSearch=""
+    if q is not None:     
+        strSearch+=f" and hoTen LIKE N'%{q}%'"
+    sql=f"SELECT DangKyThueXe.*, hoTen from DangKyThueXe, TaiKhoan where DangKyThueXe.maKH = TaiKhoan.maTaiKhoan and DangKyThueXe.trangThai = N'Hoàn tất'"+strSearch +f" order by ngayBD desc OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
+    cursor.execute(sql)
+    data_don = cursor.fetchall()
+    
+    columnName=[column[0] for column in cursor.description]
+    data_don=rsData(data_don,columnName)
+    sql=f"SELECT count(*) from DangKyThueXe, TaiKhoan where DangKyThueXe.maKH = TaiKhoan.maTaiKhoan and DangKyThueXe.trangThai = N'Hoàn tất'"+strSearch +f""
     cursor.execute(sql)
     row = cursor.fetchone()
     soLuong = row[0]
@@ -360,3 +408,88 @@ def getOrderByIdUser(id_user,trang_thai=None):
     
     conn.close()
     return rs
+
+
+def thongKeRent():
+    conn = connect()
+    cursor = conn.cursor
+
+    # Tổng số đăng ký thuê xe
+    sql_tong_so_dang_ky = 'SELECT COUNT(maThue) FROM DangKyThueXe'
+    cursor.execute(sql_tong_so_dang_ky)
+    tong_so_dang_ky = cursor.fetchone()[0]
+
+    # Tổng số đăng ký thuê xe đã duyệt
+    sql_tong_so_dang_ky_da_duyet = "SELECT COUNT(maThue) FROM DangKyThueXe WHERE trangThai = N'Đã duyệt'"
+    cursor.execute(sql_tong_so_dang_ky_da_duyet)
+    tong_so_dang_ky_da_duyet = cursor.fetchone()[0]
+
+    # Tổng số đăng ký thuê xe chưa duyệt
+    sql_tong_so_dang_ky_chua_duyet = "SELECT COUNT(maThue) FROM DangKyThueXe WHERE trangThai = N'Chưa duyệt'"
+    cursor.execute(sql_tong_so_dang_ky_chua_duyet)
+    tong_so_dang_ky_chua_duyet = cursor.fetchone()[0]
+
+    # Tổng tiền đăng ký thuê xe
+    sql_tong_tien_dang_ky = 'SELECT SUM(giaThue) FROM ChiTietThueXe'
+    cursor.execute(sql_tong_tien_dang_ky)
+    tong_tien_dang_ky = cursor.fetchone()[0]
+
+    # Đóng kết nối cơ sở dữ liệu
+    conn.close()
+
+    # Chuyển đổi giá trị Decimal thành float
+    tong_tien_dang_ky = float(tong_tien_dang_ky)
+
+    # Tạo dictionary để lưu trữ kết quả
+    thong_ke = {
+        'TongSoDangKyThueXe': tong_so_dang_ky,
+        'TongSoDangKyThueXeDaDuyet': tong_so_dang_ky_da_duyet,
+        'TongSoDangKyThueXeChuaDuyet': tong_so_dang_ky_chua_duyet,
+        'TongTienDangKyThueXe': tong_tien_dang_ky
+    }
+    # Trả về kết quả dưới dạng JSON
+    return json.dumps(thong_ke)
+
+
+def thongKeReturn():
+    conn = connect()
+    cursor = conn.cursor
+
+    # Tổng số đăng ký thuê xe
+    sql_tong_so_dang_ky = 'SELECT COUNT(maThue) FROM DangKyThueXe'
+    cursor.execute(sql_tong_so_dang_ky)
+    tong_so_dang_ky = cursor.fetchone()[0]
+
+    # Tổng số đăng ký thuê xe đã duyệt
+    sql_tong_so_dang_ky_da_duyet = "SELECT COUNT(maThue) FROM DangKyThueXe WHERE trangThai = N'Đã duyệt'"
+    cursor.execute(sql_tong_so_dang_ky_da_duyet)
+    tong_so_dang_ky_da_duyet = cursor.fetchone()[0]
+
+    # Tổng số đăng ký thuê xe chưa duyệt
+    sql_tong_so_thue_xe_da_tra = "SELECT COUNT(maThue) FROM DangKyThueXe WHERE trangThai = N'Hoàn tất'"
+    cursor.execute(sql_tong_so_thue_xe_da_tra)
+    tong_so_thue_xe_da_tra = cursor.fetchone()[0]
+
+    # Tổng tiền đăng ký thuê xe
+    sql_tong_tien_da_nhan = 'SELECT SUM(giaThue) FROM ChiTietThueXe where ngayTra is not null'
+    cursor.execute(sql_tong_tien_da_nhan)
+    tong_tien_da_nhan = cursor.fetchone()[0]
+
+    # Đóng kết nối cơ sở dữ liệu
+    conn.close()
+
+    # Chuyển đổi giá trị Decimal thành float
+    if tong_tien_da_nhan != None: 
+        tong_tien_da_nhan = float(tong_tien_da_nhan)
+    else:
+        tong_tien_da_nhan = 0
+
+    # Tạo dictionary để lưu trữ kết quả
+    thong_ke = {
+        'TongSoDangKyThueXe': tong_so_dang_ky,
+        'TongSoDangKyThueXeDaDuyet': tong_so_dang_ky_da_duyet,
+        'TongSoDangKyThueXeHoanTat': tong_so_thue_xe_da_tra,
+        'TongTienHoanTat': tong_tien_da_nhan
+    }
+    # Trả về kết quả dưới dạng JSON
+    return json.dumps(thong_ke)
