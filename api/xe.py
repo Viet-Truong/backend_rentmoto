@@ -26,8 +26,8 @@ def getAllXe(q,role,page=None,type=None):
     if role:
         sqlRole=" trangThai in (N'Hoạt động',N'Đang cho thuê') "
         check=True
-    # else:
-    #     sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
+    else:
+        sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
 
     if q != '' and q is not None:
         strSearch=f"tenXe LIKE N'%{q}%'"
@@ -230,7 +230,7 @@ def thongKeXe():
     tong_so_xe_dang_hoat_dong = cursor.fetchone()[0]
 
     # Tổng số user role = khách hàng
-    sql_tong_so_ngung_hoat_dong = "SELECT COUNT(maTaiKhoan) FROM TaiKhoan WHERE trangThai in (N'Ngưng hoạt động', N'Đã mất')"
+    sql_tong_so_ngung_hoat_dong = "SELECT COUNT(maXe) FROM Xe WHERE trangThai in (N'Ngưng hoạt động', N'Đã mất')"
     cursor.execute(sql_tong_so_ngung_hoat_dong)
     tong_so_xe_ngung_hoat_dong = cursor.fetchone()[0]
 
