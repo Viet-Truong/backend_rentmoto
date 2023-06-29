@@ -24,7 +24,10 @@ def getAllXe(q,role,page=None,type=None):
     sqlPage=''
     check=False
     if role:
-        sqlRole=" trangThai in (N'Hoạt động',N'Đang cho thuê') "
+        if q != '' and q is not None:
+            sqlRole=" trangThai in (N'Hoạt động',N'Đang cho thuê') and "
+        else:
+            sqlRole=" trangThai in (N'Hoạt động',N'Đang cho thuê')"
         check=True
     else:
         sqlPage=f" ORDER BY maXe OFFSET {vt} ROWS FETCH NEXT {so_item} ROWS ONLY;"
@@ -74,12 +77,12 @@ def getXe(maXe):
     cursor = conn.cursor
     rs = {}
     
-    cursor.execute(f"EXEC pr_get_calendar_xe @maXe='{maXe}'")
+    cursor.execute(f"EXEC pr_get_calendar_xe @slug='{maXe}'")
     lichs =  cursor.fetchall()
     data_lich=[]
     for lich in lichs:
         data_lich.append({'ngayBD':formatDate(lich.ngayBD),'ngayKT':formatDate(lich.ngayKT)})
-    sql=f"SELECT * FROM Xe where maXe='{maXe}'"
+    sql=f"SELECT * FROM Xe where slug='{maXe}'"
     
     cursor.execute(sql)
     rows = cursor.fetchall()
