@@ -14,12 +14,15 @@ Install env
 
 Restart vscode and check in terminal (env) is activated
 
-If (env) is not activated:
+-   If (env) is not activated:
+
 `Create file test1.py and write print('hello') and run to activate env`
-If (env) is not activated:
-`cd env`
-`cd Scripts`
-`activate.bat`
+
+-   If (env) is not activated:
+
+1. `cd env`
+2. `cd Scripts`
+3. `activate.bat`
 
 ### Step 4: `pip install -r requirements.txt`
 
