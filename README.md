@@ -31,3 +31,39 @@ Install lib
 ### Step 5: `python index.py`
 
 Run file index
+
+### API:
+
+-   GetURLImg
+
+-   Account user:
+
+1. Login
+2. Register
+3. ChangePass
+4. UpdateUser
+5. GetAllUser
+
+-   Motorbike:
+
+1. GetAllMotorbike
+2. GetMotorbike/{idMotor}
+3. AddMotorbike
+4. Update
+
+-   Order:
+
+1. AddOrder
+2. PayOrder
+3. AcceptOrder
+4. DoneOrder
+5. GetAllOrder
+6. GetOrderByIdUser/{idUser}
+7. GetOrder/{idOrder}
+
+-   Admin:
+
+1. StatisticsUser
+2. StatisticsMotorbike
+3. StatisticsOrder
+4. StatisticsOrderDone
