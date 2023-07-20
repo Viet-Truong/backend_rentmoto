@@ -29,6 +29,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get('/')
+def main():
+    return json.dumps({"message": 'hello'})
+
 @app.post("/login")
 def login(rq = Body()):
     return user.checkLogin(rq)
