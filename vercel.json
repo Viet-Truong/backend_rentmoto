@@ -1,13 +1,15 @@
 {
-	"functions": {
-		"index.py": {
-			"runtime":"@vercel/python"
+	"builds":[
+		{
+			"src":"index.py",
+			"use":"@vercel/python"
 		}
-	},
-	"routes": [
+	],
+	"routes":[
 		{
 			"src":"/(.*)",
 			"dest":"index.py"
 		}
+
 	]
 }

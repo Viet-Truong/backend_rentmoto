@@ -3,10 +3,10 @@ class connect():
 
     def __init__(self):
             # Thông tin cơ sở dữ liệu
-        server = 'SQL8003.site4now.net'
-        database = 'db_a99f3b_rentmoto01'
-        username = 'db_a99f3b_rentmoto01_admin'
-        password = '0905906816a'
+        server = 'SQL8006.site4now.net'
+        database = 'db_aa0fce_rentmotorbike'
+        username = 'db_aa0fce_rentmotorbike_admin'
+        password = '123456aA@'
 
         # Tạo chuỗi kết nối
         connection_string = 'DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
