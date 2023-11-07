@@ -1,18 +1,18 @@
 <h1 align="center"> API RENT MOTORBIKE ECOMMERCE </h1>
 
-## How to run project
+## How to run the project
 
 ### Step 1: Clone project
 
 In the project directory, you can run:
 
-### Step 2: `python -m venv env`
+### Step 2: Install env
 
-Install env
+```bash
+python -m venv env
+```
 
-### Step 3:
-
-Restart vscode and check in terminal (env) is activated
+### Step 3: Restart vscode and check in the terminal (env) activated
 
 -   If (env) is not activated:
 
@@ -20,17 +20,30 @@ Restart vscode and check in terminal (env) is activated
 
 -   If (env) is not activated:
 
-1. `cd env`
-2. `cd Scripts`
-3. `activate.bat`
+1.
+```bash
+cd env
+```
+2.
+```bash
+cd Scripts
+```
+3.
+```bash
+activate.bat
+```
 
-### Step 4: `pip install -r requirements.txt`
+### Step 4: Install lib
 
-Install lib
+```bash
+pip install -r requirements.txt
+```
 
-### Step 5: `python index.py`
+### Step 5: Run file index
 
-Run file index
+```bash
+python index.py
+```
 
 ### API:
 
