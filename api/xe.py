@@ -140,7 +140,7 @@ async def addXe(rq,relative_path,files):
                 params=[rq['tenXe'],rq['hangXe'],rq['trangThai'],rq['bienSoXe'],rq['loaiXe'],rq['giaThue'],rq['moTa'], rq['slug']]
                 sql="EXEC pr_add_Xe @tenXe=?,@hangXe=?,@trangThai=?,@bienSoXe=?,@loaiXe=?,@giaThue=?,@moTa=?, @slug=?"
                 if strListHinhAnh!='':
-                    sql+=",@listHinhAnh=?"
+                    sql+=",@listImage=?"
                     params.append(strListHinhAnh)
                     print(strListHinhAnh)
             
